@@ -3,6 +3,15 @@ const focoBt = document.querySelector('.app__card-button--foco')
 const curtoBt = document.querySelector('.app__card-button--curto')
 const longoBt = document.querySelector('.app__card-button--longo')
 
+const titulo = document.querySelector('.app__title')
+const banner = document.querySelector('.app__image')
+const cardTimer = document.querySelector('#timer')
+const startPauseBt = document.querySelector('.app__card-primary-button')
+
+const duracaoFoco = 1500
+const duracaoDescansoCurto = 300
+const duracaoDescansoLongo = 900
+
 focoBt.addEventListener('click', () => {
     html.setAttribute('data-contexto', 'foco')
 })
