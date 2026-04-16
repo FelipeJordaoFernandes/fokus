@@ -8,12 +8,17 @@ const titulo = document.querySelector('.app__title')
 const banner = document.querySelector('.app__image')
 const cardTimer = document.querySelector('#timer')
 const musicaFocoInput = document.querySelector('#alternar-musica')
-const startPauseBt = document.querySelector('.app__card-primary-button')
-const musica = new Audio('sons/luna-rise-part-one.mp3')
+const startPauseBt = document.querySelector('#start-pause')
+const iniciarOuPausarBt = document.querySelector('#start-pause span')
+const iconeBt = document.querySelector('.app__card-primary-butto-icon')
 
-const duracaoFoco = 1500
-const duracaoDescansoCurto = 300
-const duracaoDescansoLongo = 900
+const musica = new Audio('sons/luna-rise-part-one.mp3')
+const audioPlay = new Audio('sons/play.wav')
+const audioPausa = new Audio('sons/pause.mp3')
+const audioTempoFinalizado = new Audio('sons/beep.mp3')
+
+let tempoDecorridoEmSegundos = 1500
+let intervaloId = null
 
 focoBt.addEventListener('click', () => {
     alterarContexto('foco')
@@ -63,3 +68,44 @@ musicaFocoInput.addEventListener('change', () => {
         musica.pause()
     }
 })
+
+function mostrarTempo () {
+    const tempo = new Date(tempoDecorridoEmSegundos * 1000)
+    const tempoFormatado = tempo.toLocaleTimeString('pt-br', {minute: '2-digit', second: '2-digit'})
+    cardTimer.innerHTML = `${tempoFormatado}`
+}
+
+mostrarTempo()
+
+const contagemRegressiva = () => {
+    if(tempoDecorridoEmSegundos <= 0){
+        audioTempoFinalizado.play()
+        alert('Tempo finalizado!')
+                zerar()
+        return
+    }
+    tempoDecorridoEmSegundos -= 1
+    mostrarTempo()
+}
+
+
+startPauseBt.addEventListener('click', iniciarOuPausar)
+
+function iniciarOuPausar() {
+    if(intervaloId){
+        audioPausa.play()
+        zerar()
+        return
+    }
+    audioPlay.play()
+    intervaloId = setInterval(contagemRegressiva, 1000)
+    iniciarOuPausarBt.textContent = "Pausar"
+    iconeBt.src = 'imagens/pause.png'
+}
+
+function zerar() {
+    clearInterval(intervaloId) 
+    iniciarOuPausarBt.textContent = "Começar"
+    iconeBt.src = 'imagens/play_arrow.png'
+    intervaloId = null
+}
